@@ -1,0 +1,12 @@
+﻿<a href="@Link" class="navbar-item">
+    @Title
+</a>
+
+@code
+{
+    [Parameter]
+    public string? Link { get; set; }
+
+    [Parameter]
+    public string? Title { get; set; }
+}

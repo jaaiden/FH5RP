@@ -1,0 +1,122 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager NavigationManager
+@implements IAsyncDisposable
+
+<PageTitle>Index</PageTitle>
+
+<section class="hero is-primary is-medium">
+    <div class="hero-head">
+        <Navbar/>
+    </div>
+    <div class="hero-body">
+        <div class="container">
+            <div class="content is-medium">
+                <h1 class="title">Welcome to FH5RP!</h1>
+                <p>FH5RP is latest iteration of Discord Rich Presence for Forza Horizon 5!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+@*<section class="section">
+    <div class="container">
+        <Notification Color="primary" Title="NOTE" Content="FH5RP is still a work-in-progress. Check the Github page for updates."/>
+        <Notification Color="danger" Title="NOTE" Content="Not all data from Forza Horizon 5 is valid/supported."/>
+    </div>
+</section>*@
+
+@if (Data is not null)
+{
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+
+                <div class="column is-one-quarter">
+                    <div class="notification is-primary">
+                        <div class="content">
+                            <p class="menu-label">Current Speed (MPH)</p>
+                            <h1 class="title">@((int)Data.GetMPH()) MPH</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column is-one-quarter">
+                    <div class="notification is-primary">
+                        <div class="content">
+                            <p class="menu-label">Current Speed (KPH)</p>
+                            <h1 class="title">@((int)Data.GetKPH()) KPH</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column is-one-quarter">
+                    <div class="notification is-primary">
+                        <div class="content">
+                            <p class="menu-label">Position</p>
+                            <h1 class="title">@Data.Position.ToIntString()</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column is-one-quarter">
+                    <div class="notification is-primary">
+                        <div class="content">
+                            <p class="menu-label">Performance Index</p>
+                            <h1 class="title">@Data.Vehicle.Index.ToString() | @Data.Vehicle.PIValue</h1>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <section class="section">
+        <div class="container">
+            <div class="content">
+                <h1 class="title">No data available</h1>
+                <p>Make sure your data out settings are correct in game!</p>
+                <figure class="image">
+                    <img src="img/dataoutsettings.png">
+                </figure>
+            </div>
+        </div>
+    </section>
+}
+
+
+
+@code
+{
+    private HubConnection? hub;
+    private FH5RP.Data.TelemetryData? Data;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hub = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/datahub"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        hub.On<FH5RP.Data.TelemetryData>("ReceiveData", (d) =>
+        {
+            Console.WriteLine("Received telemetry data!");
+            if (d is not null)
+                Data = d;
+            StateHasChanged();
+        });
+
+        await hub.StartAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hub is not null)
+        {
+            await hub.DisposeAsync();
+        }
+    }
+}

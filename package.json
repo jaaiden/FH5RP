@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "name": "asp.net",
+  "private": true,
+  "devDependencies": {
+    "bulma": "^0.9.3",
+    "@fortawesome/fontawesome-free": "^5.15.4"
+  }
+}

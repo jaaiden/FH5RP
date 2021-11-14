@@ -1,0 +1,15 @@
+﻿<section class="hero is-@HeroSize is-@HeroColor">
+    @ChildContent
+</section>
+
+@code
+{
+    [Parameter]
+    public string? HeroSize { get; set; }
+
+    [Parameter]
+    public string? HeroColor { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

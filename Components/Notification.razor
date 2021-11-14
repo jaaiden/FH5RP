@@ -1,0 +1,19 @@
+﻿<div class="notification is-@Color">
+    <div class="content">
+        <strong>@Title</strong>
+        <p>@Content</p>
+    </div>
+</div>
+
+@code {
+    
+    [Parameter]
+    public string? Color { get; set; }
+
+    [Parameter]
+    public string? Title { get; set; }
+
+    [Parameter]
+    public string? Content { get; set; }
+
+}

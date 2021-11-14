@@ -1,0 +1,57 @@
+﻿@page "/debug"
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager NavigationManager
+@implements IAsyncDisposable
+
+<PageTitle>Telemetry Data</PageTitle>
+
+<Hero HeroColor="primary" HeroSize="medium">
+    <HeroHead>
+        <Navbar/>
+    </HeroHead>
+    <HeroBody>
+        <div class="container">
+            <div class="content is-medium">
+                <h1 class="title">Telemetry Data Debug</h1>
+            </div>
+        </div>
+    </HeroBody>
+</Hero>
+
+<section class="section">
+    <div class="container">
+        <pre><code>@Data</code></pre>
+    </div>
+</section>
+
+@code
+{
+    private HubConnection? hub;
+    private string? Data;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hub = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/datahub"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        hub.On<FH5RP.Data.TelemetryData>("ReceiveData", (d) =>
+        {
+            Console.WriteLine("Received telemetry data!");
+            if (d is not null)
+                Data = d.ToString();
+            StateHasChanged();
+        });
+
+        await hub.StartAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hub is not null)
+        {
+            await hub.DisposeAsync();
+        }
+    }
+}
