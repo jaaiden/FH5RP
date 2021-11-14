@@ -22,7 +22,6 @@ namespace FH5RP.Net
 
         public static void UpdatePresence(TelemetryData data)
         {
-            // Debug.Info("[RPC] Updating Discord Rich Presence.");
             if (data is null) return;
 
             Client.SetPresence(new RichPresence()

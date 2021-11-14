@@ -13,7 +13,7 @@
         <div class="container">
             <div class="content is-medium">
                 <h1 class="title">Welcome to FH5RP!</h1>
-                <p>FH5RP is latest iteration of Discord Rich Presence for Forza Horizon 5!</p>
+                <p>FH5RP is the latest iteration of Discord Rich Presence for Forza Horizon 5!</p>
             </div>
         </div>
     </div>
@@ -103,7 +103,6 @@ else
 
         hub.On<FH5RP.Data.TelemetryData>("ReceiveData", (d) =>
         {
-            Console.WriteLine("Received telemetry data!");
             if (d is not null)
                 Data = d;
             StateHasChanged();
