@@ -38,7 +38,6 @@
 
         hub.On<FH5RP.Data.TelemetryData>("ReceiveData", (d) =>
         {
-            Console.WriteLine("Received telemetry data!");
             if (d is not null)
                 Data = d.ToString();
             StateHasChanged();
